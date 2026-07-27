@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OfflineShare</string>
+    <string name="transfer_in_progress">Transferring files</string>
+    <string name="transfer_channel_name">Transfers</string>
+    <string name="transfer_channel_description">Shows progress while files are being sent or received.</string>
+    <string name="stop">Stop</string>
+</resources>
