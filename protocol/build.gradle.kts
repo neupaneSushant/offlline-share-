@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    // No version: the root build resolved it onto the shared classpath.
+    id("org.jetbrains.kotlin.jvm")
 }
 
 kotlin {

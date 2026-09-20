@@ -25,14 +25,19 @@ include(":protocol")
 // without an SDK fails the whole build -- including `:protocol:test`, which
 // has nothing to do with Android. So the app module is only wired in when an
 // SDK is actually resolvable.
+// Blank counts as absent: GitHub's ubuntu runners ship an Android SDK and
+// export ANDROID_HOME, so a job that wants the SDK-less path has to clear the
+// variable, and an empty string must not read as "here is an SDK".
+fun String?.orNullIfBlank(): String? = this?.takeIf { it.isNotBlank() }
+
 val androidSdkDir: String? =
-    System.getenv("ANDROID_HOME")
-        ?: System.getenv("ANDROID_SDK_ROOT")
+    System.getenv("ANDROID_HOME").orNullIfBlank()
+        ?: System.getenv("ANDROID_SDK_ROOT").orNullIfBlank()
         ?: file("local.properties")
             .takeIf { it.isFile }
             ?.let { propsFile ->
                 Properties().apply { propsFile.inputStream().use(::load) }.getProperty("sdk.dir")
-            }
+            }.orNullIfBlank()
 
 if (androidSdkDir != null && file(androidSdkDir).isDirectory) {
     include(":app")

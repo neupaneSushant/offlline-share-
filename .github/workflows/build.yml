@@ -17,10 +17,14 @@ jobs:
           distribution: temurin
           java-version: "17"
       - uses: gradle/actions/setup-gradle@v4
-      # No Android SDK step on purpose: settings.gradle.kts drops :app when
-      # there is no SDK, so this job proves the transport builds and its
-      # end-to-end transfers pass on a plain JDK.
+      # ANDROID_HOME is cleared on purpose. The ubuntu runner ships an Android
+      # SDK and exports it, which would pull :app into this build; blanking it
+      # exercises the path a contributor with only a JDK actually takes, and
+      # proves the transport stands on its own.
       - run: ./gradlew :protocol:test
+        env:
+          ANDROID_HOME: ""
+          ANDROID_SDK_ROOT: ""
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@v4
