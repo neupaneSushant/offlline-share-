@@ -1,20 +1,24 @@
-// Every Kotlin plugin is declared here, with a version, and applied `false`.
+// Intentionally empty.
 //
-// They have to be declared together. `kotlin.jvm` and `kotlin.android` are
-// different plugin ids backed by the same kotlin-gradle-plugin artifact, so
-// declaring one here and requesting the other from a subproject *with a
-// version* makes Gradle refuse: the jar is already on the classpath and it
-// cannot check that the requested version matches. Resolving both here puts
-// one consistent Kotlin plugin on the shared classpath, and subprojects then
-// apply them by id with no version at all.
+// Plugins are declared per module, each with its version, and this file
+// declares none. Two constraints force that, and they pull opposite ways:
 //
-// The Android Gradle Plugin is deliberately not here. It resolves only from
-// google(), and a checkout with no Android SDK -- where settings.gradle.kts
-// has already dropped :app -- would still have to download it just to
-// configure the root project. It carries its version in :app instead, which
-// is the only place it is ever applied.
-plugins {
-    alias(libs.plugins.kotlin.jvm) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.kotlin.compose) apply false
-}
+//  1. The Kotlin Android plugin reaches into AGP's classes (it looks up
+//     com.android.build.gradle.api.BaseVariant). The two must therefore land
+//     on the SAME classloader. Declaring Kotlin here and AGP in :app puts
+//     them on different ones, and applying the Kotlin plugin then dies with
+//     ClassNotFoundException: BaseVariant.
+//
+//  2. AGP resolves only from google(), so it cannot be declared here either:
+//     a JDK-only checkout, where settings.gradle.kts has already dropped
+//     :app, would still have to download AGP just to configure the root.
+//
+// Declaring nothing here satisfies both. :app resolves AGP, kotlin-android
+// and the compose plugin together onto one classpath, :protocol resolves
+// kotlin-jvm onto its own, and the two never have to agree about anything.
+//
+// It also avoids a third trap: kotlin.jvm and kotlin.android are separate
+// plugin ids backed by the same kotlin-gradle-plugin artifact. Declaring one
+// at the root and requesting the other from a subproject with a version makes
+// Gradle refuse -- the jar is already on the classpath, so it cannot check
+// that the requested version matches.

@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    // AGP carries its version here because the root build deliberately does
-    // not resolve it; the Kotlin plugins come from the root classpath, so
-    // they must be applied by id with no version.
+    // All three carry versions and resolve together onto this module's
+    // classpath. That co-location is required: the Kotlin Android plugin
+    // looks up AGP's own classes, so the two must share a classloader.
     alias(libs.plugins.android.application)
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
