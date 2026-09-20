@@ -20,8 +20,18 @@
       with NEARBY_WIFI_DEVICES; neverForLocation tells the system we are not
       deriving location from it, so users are not asked for location at all.
     -->
+    <!--
+      Both, not just FINE. From Android 12 the location prompt lets the user
+      grant COARSE even when an app asks for FINE, and declaring FINE alone is
+      an error. Wi-Fi Direct peer discovery genuinely needs FINE on these
+      versions, so a COARSE-only grant means group creation returns nothing
+      and HotspotHost falls back to a local-only hotspot.
+    -->
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
         android:maxSdkVersion="32" />
     <uses-permission
         android:name="android.permission.NEARBY_WIFI_DEVICES"

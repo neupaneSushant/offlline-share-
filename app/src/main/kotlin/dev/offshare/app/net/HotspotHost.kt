@@ -506,8 +506,13 @@ object HotspotPermissions {
             add(android.Manifest.permission.POST_NOTIFICATIONS)
         } else {
             // Pre-13, Wi-Fi Direct is treated as a location capability and
-            // silently returns nothing without this.
+            // silently returns nothing without this. Both have to be asked
+            // for together: since Android 12 the system prompt offers the
+            // user a COARSE-only choice, and requesting FINE alone is
+            // rejected. Discovery needs FINE, so a COARSE-only grant leaves
+            // the Wi-Fi Direct path unavailable and we fall back.
             add(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            add(android.Manifest.permission.ACCESS_COARSE_LOCATION)
         }
     }
 

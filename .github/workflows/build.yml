@@ -62,11 +62,19 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
 
-      # Lint runs after the APK so a style finding never costs us the build
-      # artifact; it still reports, it just does not gate.
+      # Lint runs after the APK so a finding never costs us the build
+      # artifact, but it does gate the job: continue-on-error made a failing
+      # lint step report success, which hid a real manifest error.
       - name: Lint
-        continue-on-error: true
         run: ./gradlew :app:lintDebug
+
+      # Lint stops at the first error, so the console summary hides the rest.
+      # Dump the full text report either way.
+      - name: Show lint report
+        if: always()
+        continue-on-error: true
+        run: |
+          find app/build -name 'lint-results-debug.txt' -print -exec cat {} \; || true
       - name: Upload lint report
         if: always()
         continue-on-error: true

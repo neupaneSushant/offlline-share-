@@ -106,9 +106,10 @@ single-stream mode, and rejection of unauthorized data streams. Loopback
 throughput is around 117 MB/s, comfortably above any Wi-Fi link, which is the
 point — it says the framing and threading aren't what limits a real transfer.
 
-`:app` compiles and produces a debug APK in CI, and passes Android Lint with
-no errors. Grab the APK from the **Build** workflow's `offlineshare-debug-apk`
-artifact on any green run.
+`:app` compiles and produces a debug APK in CI. Grab it from the **Build**
+workflow's `offlineshare-debug-apk` artifact on any green run. Android Lint
+gates that job, so a green run means lint found no errors; it may still report
+warnings, and the full text report is printed in the job log.
 
 Compiling is not the same as working, though, and nothing in `:app` has run on
 a phone. The parts that only real hardware can settle — whether a given device
