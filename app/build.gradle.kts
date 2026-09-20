@@ -48,6 +48,14 @@ android {
         compose = true
     }
 
+    lint {
+        // Print findings into the build log. The HTML report is uploaded as a
+        // CI artifact, but artifact storage is not reachable from every
+        // environment, and a warning nobody can read may as well not exist.
+        textReport = true
+        warningsAsErrors = false
+    }
+
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }

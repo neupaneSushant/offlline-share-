@@ -106,16 +106,22 @@ single-stream mode, and rejection of unauthorized data streams. Loopback
 throughput is around 117 MB/s, comfortably above any Wi-Fi link, which is the
 point — it says the framing and threading aren't what limits a real transfer.
 
-**`:app` has never been compiled.** It was written without an Android SDK
-available, so treat it as a careful first draft rather than working code:
-expect to fix compile errors on the first build. The CI workflow builds it on
-every push, which is the fastest way to find out what needs fixing.
+`:app` compiles and produces a debug APK in CI, and passes Android Lint with
+no errors. Grab the APK from the **Build** workflow's `offlineshare-debug-apk`
+artifact on any green run.
 
-Beyond that, the parts that can only be judged on real hardware — whether a
-given phone will form a 5 GHz group, how the `WifiNetworkSpecifier` dialog
-behaves across OEM skins, actual throughput between two specific devices —
-are exactly the parts no amount of local testing can settle. Two phones and
-an afternoon will tell you more than anything else at this stage.
+Compiling is not the same as working, though, and nothing in `:app` has run on
+a phone. The parts that only real hardware can settle — whether a given device
+forms a 5 GHz group or quietly falls back, how the `WifiNetworkSpecifier`
+dialog behaves across OEM skins, what throughput two specific phones actually
+reach — are exactly the parts no amount of CI can answer. Two phones and an
+afternoon will tell you more than anything else at this stage.
+
+Worth knowing before that first run: a Wi-Fi Direct group left running keeps
+the radio hot and makes the *next* `createGroup` fail with `BUSY`, which shows
+up as "it worked once, now it doesn't". `HotspotHost` clears any stale group
+before creating one and tears its own down in `stop()`, but if you see that
+symptom, toggling Wi-Fi off and on clears it.
 
 ### Known gaps
 
