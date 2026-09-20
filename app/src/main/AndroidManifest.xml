@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!--
-      No INTERNET permission, deliberately. Everything happens on a link this
-      app creates itself, and the absence of this permission is the strongest
-      possible statement that nothing here can phone home.
-      Note that ACCESS_NETWORK_STATE and local sockets work without it.
+      INTERNET is required even though nothing here ever reaches the internet.
+      Android gates every socket on it, including TCP and UDP to a link-local
+      address on a hotspot this app created itself, so without it the transfer
+      dies with a SecurityException before the first byte moves.
     -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />

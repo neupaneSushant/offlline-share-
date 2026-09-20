@@ -114,6 +114,11 @@ class TransferController(
     fun hostAndReceive(autoAccept: Boolean = false) {
         scope.launch {
             try {
+                // Started here, not when the session begins: on Android 12+ a
+                // foreground service cannot be started from the background,
+                // and by the time a peer connects the user may well have
+                // switched away.
+                TransferService.start(appContext, "Waiting to receive files")
                 _phase.value = Phase.PreparingNetwork
                 startServer(autoAccept)
 
@@ -152,6 +157,7 @@ class TransferController(
     fun joinAndReceive(payload: PairingPayload, autoAccept: Boolean = false) {
         scope.launch {
             try {
+                TransferService.start(appContext, "Waiting to receive files")
                 _phase.value = Phase.Joining
                 when (val joined = hotspotGuest.join(payload)) {
                     is JoinState.Joined -> {
@@ -177,6 +183,7 @@ class TransferController(
     fun joinAndSend(payload: PairingPayload, uris: List<Uri>) {
         scope.launch {
             try {
+                TransferService.start(appContext, "Sending files")
                 _phase.value = Phase.Joining
                 when (val joined = hotspotGuest.join(payload)) {
                     is JoinState.Joined -> {
@@ -206,6 +213,7 @@ class TransferController(
     fun hostAndSend(uris: List<Uri>) {
         scope.launch {
             try {
+                TransferService.start(appContext, "Sending files")
                 _phase.value = Phase.PreparingNetwork
                 when (val state = hotspotHost.start(hostReceives = false)) {
                     is HotspotState.Active -> {
@@ -298,8 +306,6 @@ class TransferController(
     private fun progressListener(destination: String? = null) = object : TransferListener {
         override fun onSessionStarted(peer: DeviceIdentity, files: List<FileMeta>) {
             _phase.value = Phase.Transferring(peer, 0, files.sumOf { it.size }, 0)
-            // The transfer is now long-running and must outlive the screen.
-            TransferService.start(appContext, notificationTitle(destination))
         }
 
         override fun onProgress(bytesCompleted: Long, bytesTotal: Long, bytesPerSecond: Long) {

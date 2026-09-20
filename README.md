@@ -147,4 +147,8 @@ for the length of one transfer. `TransferConfig.verifyIntegrity` adds
 per-chunk CRC32 for flaky *storage*; it is off by default because it forces
 the sender off the `sendfile` path.
 
-The app requests no `INTERNET` permission. Nothing here can phone home.
+The app does hold the `INTERNET` permission, because Android gates every
+socket on it — even a UDP broadcast to a hotspot the app created itself. It is
+not evidence of anything reaching the internet: there is no HTTP client and no
+remote endpoint anywhere in the code, and the only sockets opened are to the
+address carried in the pairing QR code.

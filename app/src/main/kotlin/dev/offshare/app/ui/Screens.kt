@@ -48,12 +48,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import dev.offshare.app.Phase
 import dev.offshare.app.qr.QrAnalyzer
 import dev.offshare.app.qr.QrEncoder
@@ -284,8 +284,11 @@ private fun ScanScreen(fileCount: Int, onQrScanned: (String) -> Unit, onCancel: 
                     val providerFuture = ProcessCameraProvider.getInstance(viewContext)
                     providerFuture.addListener({
                         val provider = providerFuture.get()
+                        // setSurfaceProvider, not a property assignment:
+                        // Preview has no getter, so Kotlin synthesises no
+                        // `surfaceProvider` property to assign to.
                         val preview = Preview.Builder().build().also {
-                            it.surfaceProvider = previewView.surfaceProvider
+                            it.setSurfaceProvider(previewView.surfaceProvider)
                         }
                         val analysis = ImageAnalysis.Builder()
                             // Dropping stale frames keeps the decoder on what

@@ -1,13 +1,14 @@
 [versions]
 kotlin = "2.1.21"
-agp = "8.7.3"
+# Kept in step with the Gradle version in gradle/wrapper: AGP enforces a
+# minimum Gradle, and an AGP much older than the wrapper warns on every build.
+agp = "8.10.1"
 coroutines = "1.9.0"
 composeBom = "2024.12.01"
 activityCompose = "1.9.3"
 lifecycle = "2.8.7"
 camerax = "1.4.1"
 zxing = "3.5.3"
-documentfile = "1.0.1"
 
 [libraries]
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -15,14 +16,15 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.15.0" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
+# Supplies androidx.lifecycle.compose.LocalLifecycleOwner, which replaces the
+# deprecated one in androidx.compose.ui.platform.
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 camerax-core = { module = "androidx.camera:camera-core", version.ref = "camerax" }
 camerax-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
 camerax-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
