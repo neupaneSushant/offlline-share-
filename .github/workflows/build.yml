@@ -41,7 +41,16 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+      # packages: '' is load-bearing. The action's default is
+      # "tools platform-tools", and Google retired the `tools` package, so
+      # sdkmanager exits 1 with "Failed to find package 'tools'" and the job
+      # dies before Gradle starts. The runner image already ships an SDK with
+      # licences accepted; this step only needs to point at it, and AGP pulls
+      # down the platform and build-tools it wants.
       - uses: android-actions/setup-android@v3
+        with:
+          packages: ""
+
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Assemble debug APK
@@ -65,3 +74,4 @@ jobs:
         with:
           name: lint-report
           path: app/build/reports/lint-results-debug.html
+          if-no-files-found: ignore
