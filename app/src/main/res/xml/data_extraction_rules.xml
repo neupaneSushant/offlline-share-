@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The only thing this app persists is a random device id used to recognise a
+  peer across sessions. Carrying it onto a second device would give two phones
+  the same identity, so it is excluded from both cloud backup and
+  device-to-device transfer. allowBackup="false" already covers cloud backup
+  on older versions; from Android 12 that attribute no longer governs D2D
+  transfer, which is what this file is for.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="offlineshare.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="offlineshare.xml" />
+    </device-transfer>
+</data-extraction-rules>

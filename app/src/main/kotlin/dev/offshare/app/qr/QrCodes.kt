@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.core.graphics.createBitmap
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.DecodeHintType
@@ -45,7 +46,8 @@ object QrEncoder {
             }
         }
 
-        return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+        // createBitmap defaults to ARGB_8888.
+        return createBitmap(width, height).apply {
             setPixels(pixels, 0, width, 0, 0, width, height)
         }
     }

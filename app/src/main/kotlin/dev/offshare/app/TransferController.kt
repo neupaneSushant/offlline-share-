@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import androidx.core.content.edit
 import dev.offshare.app.net.AndroidFiles
 import dev.offshare.app.net.HotspotHost
 import dev.offshare.app.net.HotspotGuest
@@ -387,7 +388,7 @@ class TransferController(
     private fun loadIdentity(): DeviceIdentity {
         val prefs = appContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val id = prefs.getString(KEY_DEVICE_ID, null) ?: DeviceIdentity.randomId().also {
-            prefs.edit().putString(KEY_DEVICE_ID, it).apply()
+            prefs.edit { putString(KEY_DEVICE_ID, it) }
         }
         val name = prefs.getString(KEY_DEVICE_NAME, null)
             ?: listOfNotNull(Build.MANUFACTURER, Build.MODEL)

@@ -430,9 +430,9 @@ class HotspotHost(private val context: Context) {
         val channel = p2pChannel
         if (manager != null && channel != null) {
             runCatching { manager.removeGroup(channel, null) }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                runCatching { channel.close() }
-            }
+            // Channel.close() exists from API 27 and minSdk is 29, so no
+            // version guard is needed here.
+            runCatching { channel.close() }
         }
         p2pManager = null
         p2pChannel = null
